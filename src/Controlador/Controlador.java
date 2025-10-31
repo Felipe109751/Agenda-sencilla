@@ -153,6 +153,39 @@ public class Controlador {
         return modelo;
     }
 
+    public DefaultTableModel buscarPorID(int id) {
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("ID");
+    modelo.addColumn("Nombre");
+    modelo.addColumn("Apellido");
+    modelo.addColumn("Teléfono");
+    modelo.addColumn("Correo");
+    modelo.addColumn("Dirección");
+
+    String query = "SELECT id, nombres, apellidos, telefono, email, direccion FROM datos WHERE id = ?";
+    try (Connection con = ConexionBD.getConnection();
+         PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            modelo.addRow(new Object[]{
+                rs.getInt("id"),
+                rs.getString("nombres"),
+                rs.getString("apellidos"),
+                rs.getString("telefono"),
+                rs.getString("email"),
+                rs.getString("direccion")
+            });
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al buscar por ID: " + e.getMessage());
+    }
+
+    return modelo;
+}
+    
+    
     public DefaultTableModel buscarPorTelefono(String telefono) {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("nombres");
@@ -228,6 +261,41 @@ public class Controlador {
         return modelo;
     }
 
+    public DefaultTableModel buscarPorRangoID(int desde, int hasta) {
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("ID");
+    modelo.addColumn("Nombre");
+    modelo.addColumn("Apellido");
+    modelo.addColumn("Teléfono");
+    modelo.addColumn("Correo");
+    modelo.addColumn("Dirección");
+
+    String query = "SELECT id, nombres, apellidos, telefono, email, direccion FROM datos WHERE id BETWEEN ? AND ?";
+    try (Connection con = ConexionBD.getConnection();
+         PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setInt(1, desde);
+        ps.setInt(2, hasta);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            modelo.addRow(new Object[]{
+                rs.getInt("id"),
+                rs.getString("nombres"),
+                rs.getString("apellidos"),
+                rs.getString("telefono"),
+                rs.getString("email"),
+                rs.getString("direccion")
+            });
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al buscar por rango de ID: " + e.getMessage());
+    }
+
+    return modelo;
+}
+    
+    
+    
     public DefaultTableModel listarContactosOrdenados() {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("nombres");
